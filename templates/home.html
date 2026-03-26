@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Kartavya Solar | Powering MSMEs & Homes in Gujarat{% endblock %}
+
+{% block content %}
+
+<section class="relative min-h-[85vh] flex items-center bg-slate-900 overflow-hidden">
+    
+
+
+    <div class="absolute inset-0 opacity-40">
+        <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&q=80&w=1920" 
+             class="w-full h-full object-cover scale-105" alt="Solar Farm">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10 grid md:grid-cols-2 gap-16 items-center pt-12">
+        <div class="animate-reveal">
+            <div class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 text-orange-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-400"></span>
+                </span>
+                Dealers Welcome PAN India
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-black text-white leading-[1.05] mb-8 tracking-tighter">
+                Let the <span class="text-orange-500 italic">Sun</span> <br />
+                Pay Your Bill.
+            </h1>
+            
+            <p class="text-lg text-slate-300 mb-10 max-w-lg leading-relaxed font-medium">
+                Custom solar energy solutions for MSMEs, Homes & Large Enterprises. 
+                Switch to sustainable power and eliminate your energy budget.
+            </p>
+            
+            <div class="flex flex-wrap gap-5">
+                <a href="{% url 'contact' %}" class="bg-orange-500 text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl shadow-orange-900/20 flex items-center gap-3">
+                    Start Your Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+                <a href="{% url 'about' %}" class="bg-white/5 backdrop-blur-md text-white border border-white/10 px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
+                    Our Mission
+                </a>
+            </div>
+        </div>
+
+        <div class="hidden md:block animate-reveal" style="animation-delay: 0.2s;">
+            <div class="relative group">
+                <div class="absolute -inset-4 bg-orange-400/20 blur-[100px] rounded-full group-hover:bg-orange-400/30 transition-all duration-700"></div>
+                <div class="relative p-3 bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-sm">
+                    <img src="https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&q=80&w=800" 
+                         alt="Installation" 
+                         class="rounded-[2rem] shadow-2xl transform rotate-2 group-hover:rotate-0 transition-all duration-700">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="bg-white py-12 border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+            <div class="text-center md:border-r border-slate-100 last:border-0">
+                <p class="text-4xl font-black text-slate-900 tracking-tighter">3000+</p>
+                <p class="text-[10px] uppercase font-black tracking-widest text-orange-500 mt-2">Tons CO2 Saved</p>
+            </div>
+            <div class="text-center md:border-r border-slate-100 last:border-0">
+                <p class="text-4xl font-black text-slate-900 tracking-tighter">5000+</p>
+                <p class="text-[10px] uppercase font-black tracking-widest text-orange-500 mt-2">Trees Equivalent</p>
+            </div>
+            <div class="text-center md:border-r border-slate-100 last:border-0">
+                <p class="text-4xl font-black text-slate-900 tracking-tighter">25 Yrs</p>
+                <p class="text-[10px] uppercase font-black tracking-widest text-orange-500 mt-2">Support Support</p>
+            </div>
+            <div class="text-center">
+                <p class="text-4xl font-black text-slate-900 tracking-tighter italic">PAN INDIA</p>
+                <p class="text-[10px] uppercase font-black tracking-widest text-orange-500 mt-2">Dealer Network</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="py-32 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <div class="max-w-2xl">
+                <p class="text-orange-500 font-black uppercase tracking-[0.3em] text-[10px] mb-4">What we do</p>
+                <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-none">
+                    High-Performance <br>Energy Solutions
+                </h2>
+            </div>
+            <p class="text-slate-500 max-w-xs font-medium text-sm leading-relaxed border-l-2 border-orange-400 pl-6">
+                Complete end-to-end solar services—from government paperwork to automated panel maintenance.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-orange-200/40 hover:-translate-y-2 transition-all duration-500 group">
+                <div class="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center mb-8 group-hover:bg-orange-500 transition-colors duration-500">
+                    <i data-lucide="building-2"></i>
+                </div>
+                <h4 class="text-2xl font-black text-slate-900 mb-4">Rooftop Plants</h4>
+                <p class="text-slate-500 text-sm leading-relaxed mb-8 font-medium">
+                    Commercial, industrial, and residential solar energy solutions tailored for MSMEs and enterprises.
+                </p>
+                <a href="{% url 'contact' %}" class="inline-flex items-center gap-2 font-black text-[11px] uppercase tracking-widest text-orange-500 hover:gap-4 transition-all">
+                    Explore More <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl text-white relative overflow-hidden hover:-translate-y-2 transition-all duration-500 group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-bl-full"></div>
+                <div class="w-14 h-14 bg-orange-500 text-white rounded-2xl flex items-center justify-center mb-8">
+                    <i data-lucide="droplets"></i>
+                </div>
+                <h4 class="text-2xl font-black mb-4 tracking-tight">Cleaning Automation</h4>
+                <p class="text-slate-400 text-sm leading-relaxed mb-8 font-medium">
+                    Maximize panel efficiency with automatic sprinkler systems. Removes dust ensuring 100% output.
+                </p>
+                <a href="{% url 'contact' %}" class="inline-flex items-center gap-2 font-black text-[11px] uppercase tracking-widest text-orange-400 hover:gap-4 transition-all">
+                    Get Details <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-orange-200/40 hover:-translate-y-2 transition-all duration-500 group">
+                <div class="w-14 h-14 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-orange-500 group-hover:text-white transition-all">
+                    <i data-lucide="thermometer-sun"></i>
+                </div>
+                <h4 class="text-2xl font-black text-slate-900 mb-4 tracking-tight">Solar Water Heaters</h4>
+                <p class="text-slate-500 text-sm leading-relaxed mb-8 font-medium">
+                    Premium GI tanks with Marine Grade Coating and PUF insulation for ultimate heat retention.
+                </p>
+                <a href="{% url 'contact' %}" class="inline-flex items-center gap-2 font-black text-[11px] uppercase tracking-widest text-orange-500 hover:gap-4 transition-all">
+                    View Specs <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-24 bg-white overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="bg-slate-900 rounded-[3rem] p-12 md:p-20 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-1/3 h-full bg-orange-500/10 -skew-x-12 translate-x-20 hidden lg:block"></div>
+
+            <div class="relative z-10 grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-black text-white mb-8 tracking-tighter leading-none">
+                        Zero Paperwork. <br>Full Professional <span class="text-orange-400">Support.</span>
+                    </h2>
+                    <p class="text-slate-400 text-lg mb-10 font-medium">
+                        Navigating government policies is complex. From MNRE to state solar approvals, our Amreli-based team handles all liaison work for you.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+                        <div class="flex items-center gap-3 text-white text-sm font-bold uppercase tracking-wide">
+                            <i data-lucide="check-circle-2" class="text-orange-400 w-5 h-5"></i> Govt. Approvals
+                        </div>
+                        <div class="flex items-center gap-3 text-white text-sm font-bold uppercase tracking-wide">
+                            <i data-lucide="check-circle-2" class="text-orange-400 w-5 h-5"></i> Policy Liaison
+                        </div>
+                    </div>
+                    <a href="{% url 'contact' %}" class="inline-block bg-white text-slate-900 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all shadow-xl">
+                        Consult Our Experts
+                    </a>
+                </div>
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&q=80&w=800" 
+                         class="rounded-[2.5rem] shadow-3xl border-4 border-white/5" alt="Project">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    lucide.createIcons();
+</script>
+
+{% endblock %}

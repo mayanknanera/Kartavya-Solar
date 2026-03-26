@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }} | Kartavya Solar{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-slate-900 pt-32 pb-20 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <img src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&q=80" class="w-full h-full object-cover" alt="Order Details">
+    </div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <h1 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase">Order <span class="text-orange-400">Details</span></h1>
+        <p class="text-slate-300 max-w-2xl mx-auto text-lg leading-relaxed font-medium">
+            Track your order and view complete details
+        </p>
+    </div>
+</section>
+
+<div class="bg-slate-50 py-12 px-4">
+    <div class="max-w-[1400px] w-full mx-auto" style="width: 80%;">
+        
+        <!-- Back Button -->
+        <a href="{% url 'orders' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 hover:bg-orange-50 hover:border-orange-400 hover:text-orange-600 font-medium mb-6 transition-all shadow-sm text-sm group">
+            <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+            Back to Orders
+        </a>
+
+        <div class="grid lg:grid-cols-3 gap-6">
+            
+            <!-- Left Column: Order Details -->
+            <div class="lg:col-span-2 space-y-4">
+                
+                <!-- Delivery Address Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-orange-500"></i>
+                        Delivery Address
+                    </h2>
+                    <div class="bg-slate-50 rounded-lg p-4 text-sm text-slate-700">
+                        <p class="font-bold text-slate-900">{{ user.first_name }} {{ user.last_name }}</p>
+                        {% if user.address %}<p class="mt-1">{{ user.address }}</p>{% endif %}
+                        {% if user.city or user.state or user.pincode %}
+                        <p>{{ user.city }}{% if user.state %}, {{ user.state }}{% endif %}{% if user.pincode %} - {{ user.pincode }}{% endif %}</p>
+                        {% endif %}
+                        {% if user.phone %}<p class="mt-2 flex items-center gap-2"><i data-lucide="phone" class="w-3 h-3 text-orange-500"></i><span class="font-medium">{{ user.phone }}</span></p>{% endif %}
+                    </div>
+                </div>
+
+                <!-- Order Items Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="shopping-bag" class="w-5 h-5 text-orange-500"></i>
+                            Order Items
+                        </h2>
+                    </div>
+                    {% for item in items %}
+                    <div class="p-6 {% if not forloop.last %}border-b border-slate-200{% endif %}">
+                        <div class="flex gap-4">
+                            <!-- Product Image -->
+                            <div class="w-24 h-24 bg-slate-50 rounded-lg border border-slate-200 flex-shrink-0 overflow-hidden">
+                                {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-contain p-2">
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Product Details -->
+                            <div class="flex-1">
+                                <h3 class="text-base font-bold text-slate-900 mb-1">{{ item.product.name }}</h3>
+                                <p class="text-sm text-slate-600 mb-2">Qty: {{ item.quantity }}</p>
+                                <p class="text-base font-bold text-orange-500">₹{{ item.price|floatformat:2 }}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Delivery Status -->
+                        <div class="mt-4 pt-4 border-t border-slate-100">
+                            {% if order.status == 'COMPLETED' %}
+                            <div class="flex items-center gap-2 text-green-600">
+                                <i data-lucide="check-circle" class="w-5 h-5"></i>
+                                <span class="font-semibold">Delivered on {{ order.created_at|date:"d M, Y" }}</span>
+                            </div>
+                            {% elif order.status == 'PROCESSING' %}
+                            <div class="flex items-center gap-2 text-orange-600">
+                                <i data-lucide="truck" class="w-5 h-5"></i>
+                                <span class="font-semibold">Out for delivery</span>
+                            </div>
+                            {% else %}
+                            <div class="flex items-center gap-2 text-blue-600">
+                                <i data-lucide="package" class="w-5 h-5"></i>
+                                <span class="font-semibold">Order placed</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- Right Column: Order Summary -->
+            <div class="lg:col-span-1">
+                
+                <!-- Order Summary Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sticky top-6">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="receipt" class="w-5 h-5 text-orange-500"></i>
+                        Order Summary
+                    </h2>
+                    
+                    <!-- Order Info -->
+                    <div class="space-y-3 pb-4 mb-4 border-b border-slate-200">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-600">Order ID:</span>
+                            <span class="font-bold text-slate-900">#{{ order.id }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-600">Order Date:</span>
+                            <span class="font-bold text-slate-900">{{ order.created_at|date:"d M, Y" }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-600">Order Status:</span>
+                            {% if order.status == 'PLACED' %}
+                                <span class="font-bold text-blue-600">Placed</span>
+                            {% elif order.status == 'PROCESSING' %}
+                                <span class="font-bold text-orange-600">Processing</span>
+                            {% elif order.status == 'COMPLETED' %}
+                                <span class="font-bold text-green-600">Delivered</span>
+                            {% elif order.status == 'CANCELLED' %}
+                                <span class="font-bold text-red-600">Cancelled</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Price Details -->
+                    <div class="space-y-3 pb-4 mb-4 border-b border-slate-200">
+                        <h3 class="font-bold text-slate-900 mb-3">Price Details</h3>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-600">Price ({{ items.count }} item{{ items.count|pluralize }})</span>
+                            <span class="font-semibold text-slate-900">₹{{ subtotal|floatformat:2 }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-600">Delivery Charges</span>
+                            <span class="text-green-600 font-bold">FREE</span>
+                        </div>
+                    </div>
+
+                    <!-- Total Amount -->
+                    <div class="flex justify-between items-center pt-2 mb-6">
+                        <span class="text-base font-bold text-slate-900">Total Amount</span>
+                        <span class="text-2xl font-black text-orange-500">₹{{ subtotal|floatformat:2 }}</span>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="bg-slate-50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center gap-2 text-sm">
+                            <i data-lucide="credit-card" class="w-4 h-4 text-orange-500"></i>
+                            <span class="text-slate-600">Payment:</span>
+                            <span class="font-bold text-slate-900">{{ order.get_payment_method_display }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Help Button -->
+                    <a href="{% url 'contact' %}" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all text-sm mb-3">
+                        <i data-lucide="headphones" class="w-4 h-4"></i>
+                        Need Help?
+                    </a>
+
+                    <!-- Cancel Order Button -->
+                    {% if order.status == 'PLACED' or order.status == 'PROCESSING' %}
+                    <form method="POST" action="{% url 'cancel_order' order.id %}" onsubmit="return confirm('Are you sure you want to cancel this order? Stock will be restored.');">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-all text-sm shadow-lg shadow-red-500/30">
+                            <i data-lucide="x-circle" class="w-4 h-4"></i>
+                            Cancel Order
+                        </button>
+                    </form>
+                    {% elif order.status == 'CANCELLED' %}
+                    <div class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-100 text-red-700 rounded-xl font-bold text-sm border border-red-200">
+                        <i data-lucide="x-circle" class="w-4 h-4"></i>
+                        Order Cancelled
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+{% endblock %}

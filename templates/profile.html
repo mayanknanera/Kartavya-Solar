@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}Profile | Kartavya Solar{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-slate-900 pt-32 pb-20 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <img src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&q=80" class="w-full h-full object-cover" alt="My Profile">
+    </div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <h1 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase">My <span class="text-orange-400">Profile</span></h1>
+        <p class="text-slate-300 max-w-2xl mx-auto text-lg leading-relaxed font-medium">
+            Manage your account settings and personal information
+        </p>
+    </div>
+</section>
+
+<div class="bg-slate-50 py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+
+        <div class="grid lg:grid-cols-3 gap-6">
+            
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <!-- Avatar -->
+                    <div class="text-center mb-6">
+                        <div class="w-24 h-24 bg-orange-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold">
+                            {{ user.first_name.0|upper }}{{ user.last_name.0|upper }}
+                        </div>
+                        <h3 class="mt-4 font-bold text-slate-900">{{ user.first_name }} {{ user.last_name }}</h3>
+                        <p class="text-sm text-slate-600">{{ user.email }}</p>
+                    </div>
+                    
+                    <!-- Navigation -->
+                    <div class="space-y-2">
+                        <button onclick="showTab('profile')" id="tab-profile" class="tab-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-slate-700 hover:bg-slate-50 transition-all flex items-center gap-3">
+                            <i data-lucide="user" class="w-5 h-5"></i>
+                            Profile Details
+                        </button>
+                        <button onclick="showTab('password')" id="tab-password" class="tab-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-slate-700 hover:bg-slate-50 transition-all flex items-center gap-3">
+                            <i data-lucide="lock" class="w-5 h-5"></i>
+                            Change Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:col-span-2">
+                
+                <!-- Profile Details Tab -->
+                <div id="content-profile" class="tab-content bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-black text-slate-900">Profile Details</h2>
+                        <p class="text-slate-600 mt-1">Update your personal information</p>
+                    </div>
+
+                    <form method="POST" class="space-y-6">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_profile">
+                        {% if next %}
+                        <input type="hidden" name="next" value="{{ next }}">
+                        {% endif %}
+
+                        <!-- Name Fields -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">First Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="first_name" value="{{ user.first_name }}" required minlength="2"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">Last Name</label>
+                                <input type="text" name="last_name" value="{{ user.last_name }}"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                                <p class="text-xs text-slate-500 mt-1">Optional</p>
+                            </div>
+                        </div>
+
+                        <!-- Contact Fields -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">Email</label>
+                                <input type="email" value="{{ user.email }}" disabled
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-slate-500 cursor-not-allowed">
+                                <p class="text-xs text-slate-500 mt-1">Email cannot be changed</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">Phone Number</label>
+                                <input type="tel" name="phone" value="{{ user.phone }}" placeholder="+91 98765 43210" pattern="[6-9][0-9]{9}" maxlength="10"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all"
+                                    title="Please enter a valid 10-digit mobile number starting with 6-9">
+                                <p class="text-xs text-slate-500 mt-1">10-digit mobile number (e.g., 9876543210)</p>
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 mb-2">Address</label>
+                            <textarea name="address" rows="3" placeholder="Street address, building, apartment"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all resize-none">{{ user.address }}</textarea>
+                        </div>
+
+                        <!-- Location Fields -->
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">City</label>
+                                <input type="text" name="city" value="{{ user.city }}" placeholder="Amreli" minlength="2"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">State</label>
+                                <input type="text" name="state" value="{{ user.state }}" placeholder="Gujarat" minlength="2"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">Pincode</label>
+                                <input type="text" name="pincode" value="{{ user.pincode }}" placeholder="365601" pattern="[0-9]{6}" maxlength="6"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all"
+                                    title="Please enter a valid 6-digit pincode">
+                                <p class="text-xs text-slate-500 mt-1">6-digit pincode</p>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex gap-4 pt-4">
+                            <button type="submit" class="px-6 py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/30 flex items-center gap-2">
+                                <i data-lucide="save" class="w-5 h-5"></i>
+                                Save Changes
+                            </button>
+                            <a href="{% url 'home' %}" class="px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Change Password Tab -->
+                <div id="content-password" class="tab-content hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-black text-slate-900">Change Password</h2>
+                        <p class="text-slate-600 mt-1">Update your password to keep your account secure</p>
+                    </div>
+
+                    <form method="POST" class="space-y-6">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="change_password">
+
+                        <!-- Current Password -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 mb-2">Current Password</label>
+                            <div class="relative">
+                                <input type="password" name="current_password" id="current_password" required
+                                    class="w-full px-4 py-3 pr-12 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                                <button type="button" onclick="togglePassword('current_password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                    <i data-lucide="eye-off" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- New Password -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 mb-2">New Password</label>
+                            <div class="relative">
+                                <input type="password" name="new_password" id="new_password" required
+                                    class="w-full px-4 py-3 pr-12 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                                <button type="button" onclick="togglePassword('new_password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                    <i data-lucide="eye-off" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">Must be at least 8 characters long</p>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 mb-2">Confirm New Password</label>
+                            <div class="relative">
+                                <input type="password" name="confirm_password" id="confirm_password" required
+                                    class="w-full px-4 py-3 pr-12 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                                <button type="button" onclick="togglePassword('confirm_password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                    <i data-lucide="eye-off" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex gap-4 pt-4">
+                            <button type="submit" class="px-6 py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/30 flex items-center gap-2">
+                                <i data-lucide="lock" class="w-5 h-5"></i>
+                                Change Password
+                            </button>
+                            <button type="button" onclick="showTab('profile')" class="px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+
+    // Tab switching
+    function showTab(tab) {
+        // Hide all content
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(el => {
+            el.classList.remove('bg-orange-50', 'text-orange-600');
+            el.classList.add('text-slate-700');
+        });
+        
+        // Show selected content
+        document.getElementById('content-' + tab).classList.remove('hidden');
+        document.getElementById('tab-' + tab).classList.add('bg-orange-50', 'text-orange-600');
+        document.getElementById('tab-' + tab).classList.remove('text-slate-700');
+        
+        lucide.createIcons();
+    }
+
+    // Password toggle
+    function togglePassword(fieldId, button) {
+        const field = document.getElementById(fieldId);
+        
+        if (field.type === 'password') {
+            // Show password - change to eye icon (no slash)
+            field.type = 'text';
+            button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+        } else {
+            // Hide password - change to eye-off icon (with slash)
+            field.type = 'password';
+            button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" x2="22" y1="2" y2="22"></line></svg>';
+        }
+    }
+
+    // Initialize with active tab from server
+    const activeTab = '{{ active_tab|default:"profile" }}';
+    showTab(activeTab);
+</script>
+{% endblock %}

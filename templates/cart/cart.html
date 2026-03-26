@@ -1,0 +1,504 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart | Kartavya Solar{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-slate-900 pt-32 pb-20 relative overflow-hidden">
+  <div class="absolute inset-0 opacity-10">
+    <img src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&q=80" class="w-full h-full object-cover" alt="Solar Shopping Cart">
+  </div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+    <h1 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase">Your Shopping <span class="text-orange-400">Cart</span></h1>
+    <p class="text-slate-300 max-w-2xl mx-auto text-lg leading-relaxed font-medium">
+      Review your selected solar products and proceed to checkout
+    </p>
+  </div>
+</section>
+
+<!-- Cart Content -->
+<section class="py-12 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {% if items %}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Cart Items Section -->
+      <div class="lg:col-span-8">
+        <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+          <!-- Header -->
+          <div class="bg-slate-800 px-6 py-4 border-b border-slate-700">
+            <h2 class="text-2xl font-bold text-white">Shopping Cart</h2>
+          </div>
+          
+          <!-- Cart Items List -->
+          <div class="divide-y divide-slate-200">
+            {% for item in items %}
+            <div
+              class="cart-item p-6"
+              data-update-url="{% url 'update_cart_item' item.id %}"
+              data-remove-url="{% url 'remove_cart_item' item.id %}"
+              data-stock="{{ item.product.stock_quantity }}"
+              data-min="{{ item.product.min_order_quantity }}"
+              data-max="{% if item.product.max_order_quantity %}{{ item.product.max_order_quantity }}{% else %}0{% endif %}"
+            >
+              <div class="flex gap-4">
+                <!-- Product Image -->
+                <div class="flex-shrink-0">
+                  <a href="{{ item.product.get_absolute_url }}">
+                    <img
+                      src="{{ item.product.image.url }}"
+                      alt="{{ item.product.name }}"
+                      class="w-24 h-24 object-cover rounded border border-slate-200"
+                    />
+                  </a>
+                </div>
+                
+                <!-- Product Details -->
+                <div class="flex-grow min-w-0">
+                  <div class="flex justify-between gap-4">
+                    <div class="flex-grow">
+                      <!-- Product Name -->
+                      <a
+                        href="{{ item.product.get_absolute_url }}"
+                        class="text-lg font-semibold text-slate-900 hover:text-orange-500 line-clamp-2 block mb-2"
+                      >
+                        {{ item.product.name }}
+                      </a>
+                      
+                      <!-- Stock Status -->
+                      <p class="text-sm text-green-600 font-medium mb-3">
+                        <i data-lucide="check-circle" class="w-4 h-4 inline"></i>
+                        In stock
+                      </p>
+                      
+                      <!-- Price -->
+                      <div class="mb-4">
+                        <span class="text-2xl font-bold text-slate-900">₹{{ item.product.price }}</span>
+                      </div>
+                      
+                      <!-- Quantity Controls -->
+                      <div class="flex items-center gap-4 mb-3">
+                        <div class="flex items-center border border-slate-300 rounded">
+                          <button
+                            type="button"
+                            class="btn-decrease px-3 py-1.5 text-slate-600 hover:bg-slate-100 border-r border-slate-300 transition-colors"
+                            aria-label="Decrease quantity"
+                          >
+                            <i data-lucide="minus" class="w-4 h-4"></i>
+                          </button>
+                          <input
+                            type="number"
+                            min="{{ item.product.min_order_quantity }}"
+                            {% if item.product.max_order_quantity %}max="{{ item.product.max_order_quantity }}"{% endif %}
+                            value="{{ item.quantity }}"
+                            class="qty-input w-16 px-3 py-1.5 text-center border-0 focus:outline-none focus:ring-1 focus:ring-orange-400 font-medium text-slate-900"
+                          />
+                          <button
+                            type="button"
+                            class="btn-increase px-3 py-1.5 text-slate-600 hover:bg-slate-100 border-l border-slate-300 transition-colors"
+                            aria-label="Increase quantity"
+                          >
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                          </button>
+                        </div>
+                        
+                        <span class="text-slate-300">|</span>
+                        
+                        <!-- Remove Button -->
+                        <button
+                          type="button"
+                          class="btn-remove text-sm text-slate-600 hover:text-red-600 font-medium transition-colors"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                      
+                      <!-- Delivery Info -->
+                      <div class="flex items-center gap-2 text-sm text-slate-600">
+                        <i data-lucide="truck" class="w-4 h-4 text-green-600"></i>
+                        <span class="font-medium text-green-600">FREE Delivery</span>
+                      </div>
+                    </div>
+                    
+                    <!-- Item Subtotal (Desktop) -->
+                    <div class="hidden sm:block text-right">
+                      <div class="text-sm text-slate-600 mb-1">Subtotal</div>
+                      <div class="text-xl font-bold text-slate-900">
+                        ₹<span class="item-total">{{ item.get_total_price }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Item Subtotal (Mobile) -->
+                  <div class="sm:hidden mt-3 pt-3 border-t border-slate-200">
+                    <div class="flex justify-between items-center">
+                      <span class="text-sm text-slate-600">Subtotal:</span>
+                      <span class="text-lg font-bold text-slate-900">
+                        ₹<span class="item-total">{{ item.get_total_price }}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          
+          <!-- Cart Footer -->
+          <div class="px-6 py-4 bg-slate-50 border-t border-slate-200">
+            <div class="flex justify-end">
+              <div class="text-right">
+                <div class="text-sm text-slate-600 mb-1">Subtotal ({{ items|length }} item{{ items|length|pluralize }}):</div>
+                <div class="text-2xl font-bold text-slate-900" id="cart-subtotal-footer">₹{{ total }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mt-6">
+          <a
+            href="{% url 'product_list' %}"
+            class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg transition-all duration-200"
+          >
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            Continue Shopping
+          </a>
+          
+          <form action="{% url 'clear_cart' %}" method="post" class="inline">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-red-600 bg-white hover:bg-red-50 border border-red-300 rounded-lg transition-all duration-200"
+            >
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              Clear Cart
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Order Summary Sidebar -->
+      <div class="lg:col-span-4">
+        <div class="sticky top-24">
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <!-- Summary Header -->
+            <div class="bg-slate-800 px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                  <i data-lucide="shopping-cart" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-black text-white">Order Summary</h3>
+                  <p class="text-sm text-slate-300">{{ items|length }} item{{ items|length|pluralize }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Summary Details -->
+            <div class="p-6 space-y-4">
+              <!-- Subtotal -->
+              <div class="flex justify-between items-center pb-4 border-b border-slate-200">
+                <span class="text-slate-600 font-bold">Subtotal</span>
+                <span id="cart-subtotal" class="text-lg font-bold text-slate-900">₹{{ total }}</span>
+              </div>
+              
+              <!-- Shipping -->
+              <div class="flex justify-between items-center pb-4 border-b border-slate-200">
+                <span class="text-slate-600 font-bold">Shipping</span>
+                <span class="inline-flex items-center gap-1 text-green-600 font-semibold">
+                  <i data-lucide="truck" class="w-4 h-4"></i>
+                  FREE
+                </span>
+              </div>
+              
+              <!-- Tax -->
+              <div class="flex justify-between items-center pb-4 border-b border-slate-200">
+                <span class="text-slate-600 font-bold">Tax</span>
+                <span class="text-slate-900 font-semibold">Included</span>
+              </div>
+              
+              <!-- Total -->
+              <div class="flex justify-between items-center pt-2">
+                <div>
+                  <div class="text-sm text-slate-500 mb-1">Total Amount</div>
+                  <div class="text-lg font-black text-slate-900">Grand Total</div>
+                </div>
+                <div id="cart-total" class="text-3xl font-black text-orange-500">₹{{ total }}</div>
+              </div>
+            </div>
+            
+            <!-- Checkout Button -->
+            <div class="px-6 pb-6">
+              <button
+                onclick="window.location.href='{% url 'checkout' %}'"
+                class="w-full bg-slate-800 hover:bg-slate-900 text-white py-4 px-6 rounded-xl font-bold text-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-slate-800/30"
+              >
+                <span>Proceed to Checkout</span>
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+              </button>
+            </div>
+            
+            <!-- Trust Badges -->
+            <div class="px-6 pb-6 pt-0 space-y-3 border-t border-slate-200">
+              <div class="flex items-center gap-3 pt-6">
+                <i data-lucide="shield-check" class="w-5 h-5 text-green-600 flex-shrink-0"></i>
+                <span class="text-sm text-slate-600">Secure Payment</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i data-lucide="rotate-ccw" class="w-5 h-5 text-blue-600 flex-shrink-0"></i>
+                <span class="text-sm text-slate-600">30-Day Returns</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i data-lucide="headphones" class="w-5 h-5 text-orange-500 flex-shrink-0"></i>
+                <span class="text-sm text-slate-600">24/7 Support</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <!-- Empty Cart State -->
+    <div class="max-w-2xl mx-auto">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-12 text-center">
+        <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <i data-lucide="shopping-cart" class="w-12 h-12 text-orange-500"></i>
+        </div>
+        <h2 class="text-3xl font-black text-slate-900 mb-3">Your cart is empty</h2>
+        <p class="text-slate-600 mb-8 max-w-md mx-auto">
+          Start adding solar products to your cart and power your future with clean energy!
+        </p>
+        <a
+          href="{% url 'product_list' %}"
+          class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 shadow-lg shadow-slate-800/30"
+        >
+          <i data-lucide="sun" class="w-5 h-5"></i>
+          <span>Browse Solar Products</span>
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+        
+        <!-- Features -->
+        <div class="flex items-center justify-center gap-8 mt-12 pt-8 border-t border-slate-200 text-sm">
+          <div class="flex items-center gap-2">
+            <i data-lucide="truck" class="w-5 h-5 text-green-600"></i>
+            <span class="font-semibold text-slate-700">Free Shipping</span>
+          </div>
+          <span class="text-slate-300">|</span>
+          <div class="flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-5 h-5 text-blue-600"></i>
+            <span class="font-semibold text-slate-700">Secure Payment</span>
+          </div>
+          <span class="text-slate-300">|</span>
+          <div class="flex items-center gap-2">
+            <i data-lucide="award" class="w-5 h-5 text-orange-500"></i>
+            <span class="font-semibold text-slate-700">Quality Products</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+async function postForm(url, data) {
+  try {
+    const csrftoken = getCookie('csrftoken');
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        'X-CSRFToken': csrftoken,
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: new URLSearchParams(data)
+    });
+    if (!response.ok) throw new Error('Network response was not ok');
+    return await response.json();
+  } catch (error) {
+    console.error('Error:', error);
+    return { success: false };
+  }
+}
+
+function updateCartBadges(count) {
+  const desktopBadge = document.getElementById('cart-badge-desktop');
+  if (desktopBadge) {
+    desktopBadge.textContent = String(count);
+    desktopBadge.classList.toggle('hidden', count === 0);
+  }
+  const mobileBadge = document.getElementById('cart-badge-mobile');
+  if (mobileBadge) {
+    mobileBadge.textContent = `${count} items`;
+    mobileBadge.classList.toggle('hidden', count === 0);
+  }
+}
+
+function updateCartTotals(total) {
+  const totalEl = document.getElementById('cart-total');
+  const subtotalEl = document.getElementById('cart-subtotal');
+  const subtotalFooterEl = document.getElementById('cart-subtotal-footer');
+  const formatted = '₹' + Number(total).toFixed(2);
+  if (totalEl) totalEl.textContent = formatted;
+  if (subtotalEl) subtotalEl.textContent = formatted;
+  if (subtotalFooterEl) subtotalFooterEl.textContent = formatted;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.cart-item').forEach(function(item) {
+    const updateUrl = item.dataset.updateUrl;
+    const removeUrl = item.dataset.removeUrl;
+    const stock = parseInt(item.dataset.stock, 10) || 0;
+    const min = parseInt(item.dataset.min, 10) || 1;
+    const max = parseInt(item.dataset.max, 10) || 0;
+
+    let effectiveMax = 0;
+    if (max > 0) effectiveMax = stock > 0 ? Math.min(max, stock) : max;
+    else if (stock > 0) effectiveMax = stock;
+
+    const qtyInput = item.querySelector('.qty-input');
+    const btnRemove = item.querySelector('.btn-remove');
+    const btnInc = item.querySelector('.btn-increase');
+    const btnDec = item.querySelector('.btn-decrease');
+    const itemTotalEl = item.querySelector('.item-total');
+
+    function clampQuantity(q) {
+      q = isNaN(q) ? min : q;
+      q = Math.max(q, min);
+      if (effectiveMax > 0) q = Math.min(q, effectiveMax);
+      return q;
+    }
+
+    function updateButtons(q) {
+      if (btnInc) {
+        btnInc.disabled = (effectiveMax > 0 && q >= effectiveMax);
+        btnInc.style.opacity = btnInc.disabled ? '0.5' : '1';
+        btnInc.style.cursor = btnInc.disabled ? 'not-allowed' : 'pointer';
+      }
+      if (btnDec) {
+        btnDec.disabled = (q <= min);
+        btnDec.style.opacity = btnDec.disabled ? '0.5' : '1';
+        btnDec.style.cursor = btnDec.disabled ? 'not-allowed' : 'pointer';
+      }
+    }
+
+    async function sendUpdate(q) {
+      const json = await postForm(updateUrl, { quantity: q });
+      if (!json.success) {
+        if (json.message && window.showToast) {
+          window.showToast(json.message, 'warning');
+        }
+        return;
+      }
+
+      qtyInput.value = json.quantity;
+      if (json.item_total !== undefined) {
+        itemTotalEl.textContent = Number(json.item_total).toFixed(2);
+      }
+      if (json.cart_total !== undefined) updateCartTotals(json.cart_total);
+      if (json.cart_count !== undefined) updateCartBadges(json.cart_count);
+      updateButtons(parseInt(q, 10));
+    }
+
+    let initial = parseInt(qtyInput.value, 10) || min;
+    const clamped = clampQuantity(initial);
+    if (clamped !== initial) qtyInput.value = clamped;
+    updateButtons(clamped);
+
+    if (btnInc) {
+      btnInc.addEventListener('click', function() {
+        if (btnInc.disabled) return;
+        let q = parseInt(qtyInput.value, 10) || min;
+        if (effectiveMax > 0 && q >= effectiveMax) {
+          if (window.showToast) {
+            window.showToast(`Maximum quantity reached: ${effectiveMax} units`, 'warning');
+          }
+          return;
+        }
+        sendUpdate(clampQuantity(q + 1));
+      });
+    }
+
+    if (btnDec) {
+      btnDec.addEventListener('click', function() {
+        if (btnDec.disabled) return;
+        let q = parseInt(qtyInput.value, 10) || min;
+        if (q <= min) {
+          if (window.showToast) {
+            window.showToast(`Minimum quantity is ${min} units`, 'warning');
+          }
+          return;
+        }
+        sendUpdate(clampQuantity(q - 1));
+      });
+    }
+
+    qtyInput.addEventListener('change', function() {
+      let q = parseInt(qtyInput.value, 10) || min;
+      if (effectiveMax > 0 && q > effectiveMax) {
+        if (window.showToast) {
+          window.showToast(`Maximum quantity exceeded: ${effectiveMax} units`, 'warning');
+        }
+      }
+      if (q < min) {
+        if (window.showToast) {
+          window.showToast(`Minimum quantity is ${min} units`, 'warning');
+        }
+      }
+      sendUpdate(clampQuantity(q));
+    });
+
+    btnRemove.addEventListener('click', function() {
+      if (!confirm('Remove this item from cart?')) return;
+
+      item.style.opacity = '0.5';
+      item.style.pointerEvents = 'none';
+
+      postForm(removeUrl, {}).then(function(json) {
+        if (!json || !json.success) {
+          item.style.opacity = '1';
+          item.style.pointerEvents = 'auto';
+          if (json?.message && window.showToast) {
+            window.showToast(json.message, 'error');
+          }
+          return;
+        }
+
+        if (json.message && window.showToast) {
+          // Show info message if cart is empty, success otherwise
+          const messageType = json.cart_empty ? 'info' : 'success';
+          window.showToast(json.message, messageType);
+        }
+        item.remove();
+        
+        if (json.cart_total !== undefined) updateCartTotals(json.cart_total);
+        if (json.cart_count !== undefined) updateCartBadges(json.cart_count);
+
+        if (json.cart_empty || document.querySelectorAll('.cart-item').length === 0) {
+          // Delay reload to show the message
+          setTimeout(() => {
+            location.reload();
+          }, 2000);
+        }
+      });
+    });
+  });
+});
+</script>
+
+{% endblock %}

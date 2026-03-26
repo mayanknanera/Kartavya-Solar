@@ -1,0 +1,275 @@
+{% extends "base.html" %} {% block title %}{{ product.name }} | Kartavya Solar{%endblock %} {% block content %}
+<section class="py-12 md:py-20 bg-slate-50 min-h-screen">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+      <!-- Left Column: Image (Sticky) -->
+      <div class="relative lg:sticky lg:top-24">
+        <div
+          class="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group"
+        >
+          <div
+            class="absolute inset-0 bg-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          ></div>
+          <img
+            src="{{ product.image.url }}"
+            alt="{{ product.name }}"
+            class="w-full h-auto object-cover rounded-2xl transform transition-transform duration-500 group-hover:scale-105"
+          />
+        </div>
+
+        <!-- Trust Indicators -->
+        <div class="flex items-center justify-between gap-2 mt-8 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+          <div class="flex items-center gap-3">
+            <div
+              class="inline-flex items-center justify-center w-10 h-10 bg-orange-100 rounded-lg text-orange-600"
+            >
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-black uppercase tracking-wider text-slate-400">Warranty</p>
+              <p class="text-xs font-bold text-slate-900">25 Years</p>
+            </div>
+          </div>
+          <div class="w-px h-8 bg-slate-100"></div>
+          <div class="flex items-center gap-3">
+            <div
+              class="inline-flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg text-blue-600"
+            >
+              <i data-lucide="truck" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-black uppercase tracking-wider text-slate-400">Shipping</p>
+              <p class="text-xs font-bold text-slate-900">Insured</p>
+            </div>
+          </div>
+          <div class="w-px h-8 bg-slate-100"></div>
+          <div class="flex items-center gap-3">
+            <div
+              class="inline-flex items-center justify-center w-10 h-10 bg-emerald-100 rounded-lg text-emerald-600"
+            >
+              <i data-lucide="award" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-black uppercase tracking-wider text-slate-400">Quality</p>
+              <p class="text-xs font-bold text-slate-900">MNRE Cert</p>
+            </div>
+          </div>
+          <div class="w-px h-8 bg-slate-100"></div>
+          <div class="flex items-center gap-3">
+            <div
+              class="inline-flex items-center justify-center w-10 h-10 bg-purple-100 rounded-lg text-purple-600"
+            >
+              <i data-lucide="headset" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-black uppercase tracking-wider text-slate-400">Support</p>
+              <p class="text-xs font-bold text-slate-900">Lifetime</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Product Info -->
+      <div class="flex flex-col">
+        <!-- Category Badge -->
+        <div class="mb-4">
+          <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-full text-sm font-bold">
+            <i data-lucide="tag" class="w-4 h-4"></i>
+            {{ product.get_category_display }}
+          </span>
+        </div>
+        
+        <h1
+          class="text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight"
+        >
+          {{ product.name }}
+        </h1>
+
+        <div class="flex items-center gap-4 mb-8">
+          <span class="text-4xl font-black text-orange-600"
+            >₹{{ product.price|floatformat:0 }}</span
+          >
+          {% if product.stock_quantity > 0 and product.stock_quantity < 10 %}
+          <span
+            class="bg-red-100 text-red-600 text-xs font-bold px-3 py-1 rounded-full animate-pulse"
+          >
+            Only {{product.stock_quantity }} left!</span
+          >
+          {% endif %}
+        </div>
+
+        <div class="prose prose-slate prose-lg text-slate-500 mb-10">
+          {{ product.description|linebreaks }}
+        </div>
+
+        <!-- Add to Cart Card -->
+        <div
+          class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/50 mb-10"
+        >
+          <form
+            action="{% url 'add_to_cart' product.id %}"
+            method="post"
+            class="flex flex-col gap-6"
+          >
+            {% csrf_token %}
+            
+            {% if product.stock_quantity > 0 %}
+            <!-- Quantity selector (only for authenticated users) -->
+            {% if user.is_authenticated %}
+            <div class="flex items-center justify-between">
+              <label
+                for="quantity"
+                class="text-xs font-black uppercase tracking-widest text-slate-400"
+                >Quantity</label
+              >
+              <div
+                class="flex items-center border-2 border-slate-100 rounded-xl bg-slate-50"
+              >
+                <button
+                  type="button"
+                  onclick="updateQty(-1)"
+                  class="p-3 hover:bg-white hover:text-orange-600 text-slate-400 transition-all rounded-l-xl"
+                >
+                  <i data-lucide="minus" class="w-4 h-4"></i>
+                </button>
+                <input
+                  type="number"
+                  name="quantity"
+                  id="quantity"
+                  value="{{ product.min_order_quantity }}"
+                  min="{{ product.min_order_quantity }}"
+                  {% if product.max_order_quantity %}max="{{ product.max_order_quantity }}"{% endif %}
+                  class="w-12 text-center font-bold text-slate-900 bg-transparent focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+                <button
+                  type="button"
+                  onclick="updateQty(1)"
+                  class="p-3 hover:bg-white hover:text-orange-600 text-slate-400 transition-all rounded-r-xl"
+                >
+                  <i data-lucide="plus" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+            {% else %}
+            <!-- Hidden quantity field for non-authenticated users -->
+            <input type="hidden" name="quantity" value="{{ product.min_order_quantity }}">
+            {% endif %}
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button
+                type="submit"
+                class="bg-slate-900 text-white px-6 py-4 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-slate-900/20 hover:shadow-orange-600/20 flex items-center justify-center gap-2 group"
+              >
+                <i
+                  data-lucide="shopping-cart"
+                  class="w-5 h-5 group-hover:scale-110 transition-transform"
+                ></i>
+                {% if user.is_authenticated %}Add to Cart{% else %}Login to Add to Cart{% endif %}
+              </button>
+              <a
+                href="{% url 'contact' %}"
+                class="border-2 border-slate-200 text-slate-700 px-6 py-4 rounded-xl font-bold hover:border-orange-600 hover:text-orange-600 transition-all text-center flex items-center justify-center"
+              >
+                Get Quote
+              </a>
+            </div>
+            {% else %}
+            <!-- Out of stock -->
+            <button
+              disabled
+              class="w-full bg-slate-100 text-slate-400 py-4 rounded-xl font-bold cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <i data-lucide="slash" class="w-5 h-5"></i>
+              Out of Stock
+            </button>
+            <a
+              href="{% url 'contact' %}"
+              class="block w-full border-2 border-slate-200 text-slate-700 py-4 rounded-xl font-bold hover:border-orange-600 hover:text-orange-600 transition-all text-center"
+            >
+              Notify when available
+            </a>
+            {% endif %}
+          </form>
+        </div>
+
+        <!-- Features List -->
+        <div class="border-t border-slate-200 pt-8">
+          <h3
+            class="font-black text-slate-900 uppercase tracking-wider text-xs mb-6"
+          >
+            Product Highlights
+          </h3>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <div
+                class="mt-1 bg-emerald-100 p-1 rounded-full text-emerald-600"
+              >
+                <i data-lucide="check" class="w-3 h-3"></i>
+              </div>
+              <div>
+                <span class="block font-bold text-slate-900 text-sm"
+                  >MNRE Approved Efficiency</span
+                >
+                <span class="text-xs text-slate-500 font-medium"
+                  >Certified for government subsidy schemes</span
+                >
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <div
+                class="mt-1 bg-emerald-100 p-1 rounded-full text-emerald-600"
+              >
+                <i data-lucide="check" class="w-3 h-3"></i>
+              </div>
+              <div>
+                <span class="block font-bold text-slate-900 text-sm"
+                  >Built for Indian Climate</span
+                >
+                <span class="text-xs text-slate-500 font-medium"
+                  >Tested for high heat and humidity performance</span
+                >
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <div
+                class="mt-1 bg-emerald-100 p-1 rounded-full text-emerald-600"
+              >
+                <i data-lucide="check" class="w-3 h-3"></i>
+              </div>
+              <div>
+                <span class="block font-bold text-slate-900 text-sm"
+                  >Easy Installation Support</span
+                >
+                <span class="text-xs text-slate-500 font-medium"
+                  >Compatible with standard mounting structures</span
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    lucide.createIcons();
+  });
+
+  function updateQty(change) {
+    const input = document.getElementById("quantity");
+    if (!input) return;
+
+    const current = parseInt(input.value) || 0;
+    const min = parseInt(input.getAttribute("min")) || 1;
+    const max = parseInt(input.getAttribute("max")) || Infinity;
+
+    let newValue = current + change;
+
+    if (newValue >= min && newValue <= max) {
+      input.value = newValue;
+    }
+  }
+</script>
+{% endblock %}

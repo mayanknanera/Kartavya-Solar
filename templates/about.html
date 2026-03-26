@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us | Kartavya Solar - Sustainable Energy Experts{% endblock %}
+
+{% block content %}
+
+<section class="bg-slate-900 pt-32 pb-20 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <img src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&q=80" class="w-full h-full object-cover" alt="About Kartavya Solar">
+    </div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <h1 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase">The Power Behind <span class="text-orange-400">Kartavya</span></h1>
+        <p class="text-slate-300 max-w-2xl mx-auto text-lg leading-relaxed font-medium">
+            Our Sustainability Mission - Empowering MSMEs, Homes & Enterprises with Green Energy
+        </p>
+    </div>
+</section>
+
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="reveal relative">
+                <div class="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-slate-50">
+                    <img src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&q=80&w=800" alt="Kartavya Solar Plant">
+                </div>
+                <div class="absolute -bottom-10 -right-10 w-64 h-64 rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white hidden md:block z-20">
+                    <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&q=80&w=500" alt="Solar Installation" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <div class="reveal">
+                <h2 class="text-orange-500 font-bold uppercase tracking-[0.2em] text-sm mb-4">Green & Clean Energy</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight mb-8">Empowering MSMEs, <br><span class="text-orange-500">Homes & Enterprises.</span></h3>
+                <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                    KARTAVYA SOLAR specializes in custom solar energy solutions designed for the specific needs of commercial buildings and residential spaces in Amreli and across India. 
+                </p>
+                <p class="text-gray-500 leading-relaxed mb-8">
+                    Solar energy is non-polluting, renewable, and the source is free! We take pride in helping you reduce your environmental footprint and energy budget simultaneously. Our systems help you earn <strong>IGBC and LEED Green Building Certification points</strong>, crucial for sustainable design.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                        <i data-lucide="leaf" class="text-orange-500 w-6 h-6 shrink-0"></i>
+                        <div>
+                            <p class="font-bold text-slate-900">5000+ Trees</p>
+                            <p class="text-xs text-gray-500 uppercase font-bold">Annual Equivalent</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                        <i data-lucide="badge-check" class="text-orange-500 w-6 h-6 shrink-0"></i>
+                        <div>
+                            <p class="font-bold text-slate-900">Authorized</p>
+                            <p class="text-xs text-gray-500 uppercase font-bold">Rated Solutions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+            <div>
+                <h2 class="text-orange-500 font-bold uppercase tracking-widest text-sm mb-4">Engineering Specs</h2>
+                <h3 class="text-4xl font-black text-slate-900">Technical Excellence</h3>
+            </div>
+            <p class="text-gray-500 max-w-sm">We provide high-grade materials for maximum longevity.</p>
+        </div>
+        
+        <div class="bg-white rounded-[3rem] p-8 md:p-12 shadow-xl border border-gray-100 grid md:grid-cols-2 gap-12">
+            <div>
+                <h4 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                    <i data-lucide="droplets" class="text-orange-500"></i> Solar Water Heater
+                </h4>
+                <div class="space-y-4">
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-gray-500">Inner Tank</span>
+                        <span class="font-bold">2.5 mm Galvanized Iron</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-gray-500">Inner Coating</span>
+                        <span class="font-bold">High Grade Marine Coating</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-gray-500">Insulation</span>
+                        <span class="font-bold">50 mm High-density PUF</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-gray-500">Stand</span>
+                        <span class="font-bold">1.5 mm GI Powder Coated</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                    <i data-lucide="sparkles" class="text-orange-500"></i> Cleaning Automation
+                </h4>
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    Our team of environmentally conscious entrepreneurs has developed fully automatic solar panel cleaning systems using specialized sprinklers.
+                </p>
+                <ul class="space-y-3 text-sm font-semibold text-slate-900">
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="text-green-500 w-4 h-4"></i> Removes dirt, dust, and debris</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="text-green-500 w-4 h-4"></i> Fully automatic controller</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="text-green-500 w-4 h-4"></i> Maximizes panel efficiency</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-24 bg-slate-900 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="grid md:grid-cols-2 gap-12">
+            <div class="group p-12 rounded-[3rem] bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all duration-500 reveal">
+                <div class="w-16 h-16 bg-orange-500 text-white rounded-2xl flex items-center justify-center mb-8 group-hover:rotate-6 transition-transform">
+                    <i data-lucide="target" class="w-8 h-8"></i>
+                </div>
+                <h4 class="text-3xl font-black text-white mb-6">Our Mission</h4>
+                <p class="text-slate-300 text-lg leading-relaxed">
+                    Green & Clean Energy for MSMEs, Homes & Large Enterprises. We aim to provide professional consultancy, government liaison, and high-performance engineering to make renewable energy accessible to all.
+                </p>
+            </div>
+
+            <div class="group p-12 rounded-[3rem] bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all duration-500 reveal delay-200">
+                <div class="w-16 h-16 bg-orange-500 text-white rounded-2xl flex items-center justify-center mb-8 group-hover:-rotate-6 transition-transform">
+                    <i data-lucide="file-text" class="w-8 h-8"></i>
+                </div>
+                <h4 class="text-3xl font-black text-white mb-6">Liaison Expertise</h4>
+                <p class="text-slate-300 text-lg leading-relaxed">
+                    Since solar policies were announced in India by MNRE, Kartavya Solar has been at the forefront of government liaison, ensuring our clients receive clear guidance through complex approval processes.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-24 bg-white">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <div class="bg-slate-900 p-12 md:p-20 rounded-[3.5rem] relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+            <h3 class="text-3xl md:text-5xl font-black text-white mb-8 relative z-10">Dealers Welcome PAN INDIA</h3>
+            <p class="text-slate-300 mb-10 text-lg relative z-10">We look forward to working with you to make your workplaces more efficient.</p>
+            <div class="flex flex-wrap justify-center gap-4 relative z-10">
+                <a href="{% url 'contact' %}" class="bg-orange-500 text-white px-10 py-4 rounded-2xl font-black text-lg hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/30">Partner With Us</a>
+                <a href="tel:+917874603633" class="bg-white/10 text-white border border-white/20 px-10 py-4 rounded-2xl font-black text-lg hover:bg-white/20 transition-all backdrop-blur-sm">Call Our Amreli Office</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

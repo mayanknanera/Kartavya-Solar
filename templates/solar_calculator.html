@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Solar Savings Calculator | Kartavya Solar Amreli{% endblock %}
+
+{% block content %}
+<section class="bg-blue-950 pt-32 pb-20 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <h1 class="text-4xl md:text-6xl font-black text-white mb-4 uppercase">Solar <span class="text-orange-500">Savings</span> Calculator</h1>
+        <p class="text-blue-100/60 max-w-xl mx-auto text-lg">Project your energy savings and see when your new system will "pay for itself" as per Kartavya Solar standards.</p>
+    </div>
+</section>
+
+<section class="py-20 bg-slate-50 relative z-20 -mt-10">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="bg-white rounded-[3rem] shadow-2xl p-8 md:p-12 border border-gray-100 reveal">
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div>
+                        <label class="block text-sm font-black text-blue-950 uppercase tracking-widest mb-4"> Monthly Electricity Bill (₹) </label>
+                        <input type="range" id="billRange" min="500" max="50000" step="500" value="5000" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-600">
+                        <div class="flex justify-between mt-4">
+                            <span class="text-gray-400 text-xs font-bold">₹500</span>
+                            <span class="text-orange-600 font-black text-2xl">₹<span id="billDisplay">5000</span></span>
+                            <span class="text-gray-400 text-xs font-bold">₹50,000+</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-black text-blue-950 uppercase tracking-widest mb-4"> Available Roof Area (Sq. Ft) </label>
+                        <input type="range" id="areaRange" min="100" max="10000" step="100" value="1000" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-950">
+                        <div class="flex justify-between mt-4">
+                            <span class="text-gray-400 text-xs font-bold">100 Sqft</span>
+                            <span class="text-blue-950 font-black text-2xl"><span id="areaDisplay">1000</span> <small class="text-sm">Sqft</small></span>
+                            <span class="text-gray-400 text-xs font-bold">10,000+</span>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-orange-50 rounded-2xl border border-orange-100">
+                        <div class="flex gap-3 items-center text-orange-800 font-bold mb-2">
+                            <i data-lucide="leaf" class="w-5 h-5 text-orange-600"></i>
+                            <span>Environmental Impact</span>
+                        </div>
+                        <p class="text-sm text-orange-700/80 leading-relaxed">
+                            Your system will offset significant CO2 emissions. For MSMEs, a typical plant abates over <strong>3000+ Tons</strong> of carbon over its lifetime.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-950 rounded-[2.5rem] p-8 text-white flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-orange-600/10 rounded-full -mr-16 -mt-16"></div>
+                    
+                    <div>
+                        <h4 class="text-orange-500 font-bold uppercase tracking-widest text-xs mb-6">Kartavya Projections</h4>
+                        
+                        <div class="space-y-8">
+                            <div>
+                                <p class="text-blue-100/50 text-xs font-bold uppercase mb-1">Recommended System</p>
+                                <p class="text-4xl font-black"><span id="systemSize">4.0</span> <span class="text-orange-500 text-xl">kW</span></p>
+                            </div>
+
+                            <div>
+                                <p class="text-blue-100/50 text-xs font-bold uppercase mb-1">Annual Savings</p>
+                                <p class="text-4xl font-black text-green-400">₹<span id="annualSavings">54,000</span></p>
+                            </div>
+
+                            <div>
+                                <p class="text-blue-100/50 text-xs font-bold uppercase mb-1">Payback Period</p>
+                                <p class="text-xl font-bold italic">~ <span id="payback">4.0</span> Years</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="window.location.href='{% url 'contact' %}'" class="mt-10 w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-4 rounded-xl transition-all flex items-center justify-center gap-3 group">
+                        Apply for Subsidy <i data-lucide="chevron-right" class="group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+        <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 text-center reveal">
+            <i data-lucide="trending-up" class="w-10 h-10 text-orange-600 mx-auto mb-4"></i>
+            <h5 class="font-bold text-blue-950 mb-2 uppercase">High ROI</h5>
+            <p class="text-sm text-gray-500 leading-relaxed">Solar offers better returns than traditional investments by utilizing un-utilized rooftop space.</p>
+        </div>
+        <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 text-center reveal delay-100">
+            <i data-lucide="sun" class="w-10 h-10 text-orange-600 mx-auto mb-4"></i>
+            <h5 class="font-bold text-blue-950 mb-2 uppercase">Free Source</h5>
+            <p class="text-sm text-gray-500 leading-relaxed">The sun is a free, non-polluting, and renewable source of energy for the next 25+ years.</p>
+        </div>
+        <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 text-center reveal delay-200">
+            <i data-lucide="shield-check" class="w-10 h-10 text-orange-600 mx-auto mb-4"></i>
+            <h5 class="font-bold text-blue-950 mb-2 uppercase">Low Maintenance</h5>
+            <p class="text-sm text-gray-500 leading-relaxed">Requires minimal maintenance, especially with our automatic cleaning sprinkler systems.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    const billRange = document.getElementById('billRange');
+    const areaRange = document.getElementById('areaRange');
+    
+    const billDisplay = document.getElementById('billDisplay');
+    const areaDisplay = document.getElementById('areaDisplay');
+    
+    const systemSize = document.getElementById('systemSize');
+    const annualSavings = document.getElementById('annualSavings');
+    const payback = document.getElementById('payback');
+
+    function calculateSolar() {
+        const bill = parseInt(billRange.value);
+        const area = parseInt(areaRange.value);
+
+        // Logic adjusted for Gujarat standard rates: 1kW roughly covers ₹1100 of a monthly bill
+        let recommendedKW = bill / 1100; 
+        
+        // 1kW needs approx 90-100 shadow-free sqft
+        const areaLimitKW = area / 90;
+        if (recommendedKW > areaLimitKW) {
+            recommendedKW = areaLimitKW;
+        }
+
+        // Calculation: kW * 4 units/day * 365 days * ₹8 avg per unit
+        const yearlySaving = recommendedKW * 4 * 365 * 8; 
+        
+        // Cost estimation after average residential subsidy or commercial gross
+        const estimatedCost = recommendedKW * 60000; 
+        const paybackYears = estimatedCost / yearlySaving;
+
+        // Update UI
+        billDisplay.innerText = bill.toLocaleString();
+        areaDisplay.innerText = area.toLocaleString();
+        systemSize.innerText = recommendedKW.toFixed(1);
+        annualSavings.innerText = Math.round(yearlySaving).toLocaleString();
+        payback.innerText = paybackYears.toFixed(1);
+    }
+
+    billRange.addEventListener('input', calculateSolar);
+    areaRange.addEventListener('input', calculateSolar);
+
+    // Initial Calculation
+    calculateSolar();
+</script>
+{% endblock %}

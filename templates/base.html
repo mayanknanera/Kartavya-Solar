@@ -1,0 +1,403 @@
+{% load tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kartavya Solar | Green Energy{% endblock %}</title>
+    {% tailwind_css %}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+        .dropdown-menu { display: none; opacity: 0; transform: translateY(12px); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
+        #mobileMenu { transition: all 0.3s ease-in-out; max-height: 0; overflow: hidden; opacity: 0; }
+        #mobileMenu.open { max-height: 600px; opacity: 1; padding-bottom: 2rem; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+<header id="mainHeader" class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 transition-all">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="py-4 flex justify-between items-center">
+            
+            <a href="{% url 'home' %}" class="flex items-center gap-3 group">
+                <div class="bg-orange-500 p-2 rounded-xl text-white shadow-lg shadow-orange-500/20 group-hover:rotate-12 transition-transform duration-300">
+                    <i data-lucide="sun-medium" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-black uppercase tracking-tighter">Kartavya<span class="text-orange-500 italic">Solar</span></span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-8">
+                <div class="flex items-center gap-8 pr-4">
+                    <a href="{% url 'home' %}" class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-orange-500 transition-colors">Home</a>
+                    <a href="{% url 'about' %}" class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-orange-500 transition-colors">About</a>
+                    <a href="{% url 'product_list' %}" class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-orange-500 transition-colors">Products</a>
+                    <a href="{% url 'contact' %}" class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-orange-500 transition-colors">Contact</a>
+                </div>
+
+                <div class="h-5 w-px bg-slate-200"></div>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'cart' %}" class="flex items-center gap-2 text-slate-600 hover:text-orange-500 transition-colors">
+                        <span class="text-[11px] font-bold uppercase tracking-[0.2em]">Cart</span>
+                        <span id="cart-badge-desktop" class="bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full {% if cart_item_count == 0 %}hidden{% endif %}">
+                            {{ cart_item_count }}
+                        </span>
+                    </a>
+                    <div class="relative ml-2">
+                        <button id="profileBtn" class="group flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-slate-50 transition-all focus:outline-none">
+                            <div class="flex items-center gap-3">
+                                <!-- Avatar with solid orange -->
+                                <div class="relative">
+                                    <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center border-2 border-orange-100 shadow-md group-hover:shadow-lg transition-all">
+                                        <span class="text-sm font-black text-white">
+                                            {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- User Name -->
+                                <div class="hidden lg:block text-left">
+                                    <p class="text-xs font-black text-slate-900 leading-tight">{{ user.first_name }}</p>
+                                    <p class="text-[10px] text-slate-500 font-semibold">My Account</p>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-hover:text-slate-900 transition-all"></i>
+                        </button>
+                        
+                        <div id="profileMenu" class="dropdown-menu absolute right-0 mt-3 w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden">
+                            <!-- Profile Header -->
+                            <div class="px-6 py-5 bg-orange-500 text-white">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/30">
+                                        <span class="text-xl font-black">
+                                            {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}
+                                        </span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-black truncate">{{ user.first_name }} {{ user.last_name }}</p>
+                                        <p class="text-xs text-orange-100 truncate">{{ user.email }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Menu Items -->
+                            <div class="p-3 space-y-1">
+                                <a href="{% url 'profile' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-all group">
+                                    <div class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                                        <i data-lucide="user" class="w-4 h-4"></i>
+                                    </div>
+                                    <span>Profile Settings</span>
+                                </a>
+                                
+                                <a href="{% url 'orders' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-all group">
+                                    <div class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                                        <i data-lucide="package" class="w-4 h-4"></i>
+                                    </div>
+                                    <span>My Orders</span>
+                                </a>
+                                
+                                <a href="{% url 'cart' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-all group">
+                                    <div class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                                    </div>
+                                    <span>My Cart</span>
+                                    {% if cart_item_count > 0 %}
+                                    <span class="ml-auto bg-orange-500 text-white text-xs font-black px-2 py-0.5 rounded-full">{{ cart_item_count }}</span>
+                                    {% endif %}
+                                </a>
+                                
+                                <div class="my-2 border-t border-slate-100"></div>
+                                
+                                <form method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 rounded-xl text-left transition-all group">
+                                        <div class="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center group-hover:bg-red-100 transition-colors">
+                                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                                        </div>
+                                        <span>Sign Out</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="flex items-center gap-6">
+                        <a href="{% url 'login' %}" class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-600 hover:text-orange-500 transition-colors">Login</a>
+                        <a href="{% url 'signup' %}" class="bg-slate-900 text-white px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-orange-500 hover:shadow-xl hover:shadow-orange-500/20 transition-all">Join Now</a>
+                    </div>
+                {% endif %}
+            </nav>
+
+            <button id="mobileMenuBtn" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-all">
+                <i data-lucide="menu" id="menuIcon" class="w-6 h-6"></i>
+                <i data-lucide="x" id="closeIcon" class="w-6 h-6 hidden"></i>
+            </button>
+        </div>
+
+        <nav id="mobileMenu" class="md:hidden flex flex-col space-y-4">
+            <div class="h-px bg-slate-100 mb-2"></div>
+            <a href="{% url 'home' %}" class="text-[11px] font-black uppercase tracking-widest text-slate-500 px-2 py-2">Home</a>
+            <a href="{% url 'about' %}" class="text-[11px] font-black uppercase tracking-widest text-slate-500 px-2 py-2">About Us</a>
+            <a href="{% url 'product_list' %}" class="text-[11px] font-black uppercase tracking-widest text-slate-500 px-2 py-2">Products</a>
+            <a href="{% url 'contact' %}" class="text-[11px] font-black uppercase tracking-widest text-slate-500 px-2 py-2">Contact</a>
+            
+            <div class="pt-6 flex flex-col gap-3">
+                {% if user.is_authenticated %}
+                    <div class="px-4 py-4 bg-orange-50 rounded-2xl mb-2 border border-orange-100">
+                        <p class="text-[9px] text-orange-400 font-black uppercase tracking-widest">Active Profile</p>
+                        <p class="text-sm font-black text-slate-900">{{ user.get_full_name }}</p>
+                    </div>
+                    <a href="{% url 'cart' %}" class="flex items-center justify-between gap-3 px-2 py-2 text-[11px] font-black uppercase tracking-widest text-slate-600">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i> Cart
+                        </div>
+                        <span id="cart-badge-mobile" class="bg-orange-500 text-white text-[9px] px-2 py-0.5 rounded-full {% if cart_item_count == 0 %}hidden{% endif %}">
+                            {{ cart_item_count }} items
+                        </span>
+                    </a>
+                    <a href="{% url 'profile' %}" class="text-[11px] font-black uppercase tracking-widest text-slate-600 px-2">Settings</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-center py-4 text-[11px] font-black uppercase tracking-widest text-slate-600">Login</a>
+                    <a href="{% url 'signup' %}" class="bg-slate-900 text-white text-center py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-slate-900/20">Get Started</a>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- Messages Container - Below Navbar, Above Content -->
+{% if messages %}
+<div id="messages-container" class="w-full flex flex-col items-center px-4 py-4 bg-slate-50">
+    {% for message in messages %}
+        <div class="message-toast mb-3 w-full max-w-md bg-white rounded-2xl shadow-2xl border-2 pointer-events-auto transform translate-y-[-20px] opacity-0 transition-all duration-500
+            {% if message.tags == 'success' %}border-green-500{% elif message.tags == 'error' %}border-red-500{% elif message.tags == 'warning' %}border-orange-500{% else %}border-blue-500{% endif %}">
+            <div class="flex items-center gap-4 p-4">
+                <div class="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center
+                    {% if message.tags == 'success' %}bg-green-100{% elif message.tags == 'error' %}bg-red-100{% elif message.tags == 'warning' %}bg-orange-100{% else %}bg-blue-100{% endif %}">
+                    <i data-lucide="{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}" 
+                       class="w-5 h-5 {% if message.tags == 'success' %}text-green-600{% elif message.tags == 'error' %}text-red-600{% elif message.tags == 'warning' %}text-orange-600{% else %}text-blue-600{% endif %}"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-slate-900">{{ message }}</p>
+                </div>
+                <button onclick="this.closest('.message-toast').remove(); if(window.checkAndHideContainer) checkAndHideContainer();" class="flex-shrink-0 text-slate-400 hover:text-slate-600 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% else %}
+<!-- Empty container for dynamic messages -->
+<div id="messages-container" class="w-full flex-col items-center px-4 bg-slate-50 hidden"></div>
+{% endif %}
+
+<main class="min-h-[75vh]">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-slate-900 text-white pt-20 pb-10">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-16">
+            <div class="col-span-1 md:col-span-1">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="bg-orange-500 p-2 rounded-xl text-white">
+                        <i data-lucide="sun-medium" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-xl font-black uppercase tracking-tighter">Kartavya<span class="text-orange-500">Solar</span></span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed font-bold">
+                    Leading the charge in <span class="text-orange-400">sustainable energy</span> across India. Quality solar EPC services for a <span class="text-white">brighter tomorrow</span>.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400 mb-8">Company</h4>
+                <ul class="space-y-4">
+                    <li><a href="{% url 'home' %}" class="text-slate-400 hover:text-white text-sm font-bold transition-colors">Home</a></li>
+                    <li><a href="{% url 'about' %}" class="text-slate-400 hover:text-white text-sm font-bold transition-colors">History</a></li>
+                    <li><a href="{% url 'product_list' %}" class="text-slate-400 hover:text-white text-sm font-bold transition-colors">Solar Units</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400 mb-8">Support</h4>
+                <ul class="space-y-4">
+                    <li class="text-slate-400 text-sm font-bold uppercase tracking-wider italic">care@kartavyasolar.com</li>
+                    <li class="text-slate-400 text-sm font-bold">+91 78746 03633</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400 mb-8">Mission</h4>
+                <p class="text-slate-400 text-xs font-bold leading-relaxed uppercase tracking-widest">PAN INDIA SOLAR NETWORK</p>
+                <div class="h-1 w-12 bg-orange-500 rounded-full mt-4"></div>
+            </div>
+        </div>
+
+        <div class="pt-8 border-t border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-slate-500 text-[9px] font-black uppercase tracking-[0.4em]">
+                © {% now "Y" %} Kartavya Solar • Sustainable Future
+            </p>
+            <div class="flex gap-8">
+                <i data-lucide="instagram" class="w-5 h-5 text-slate-500 hover:text-white transition-colors cursor-pointer"></i>
+                <i data-lucide="linkedin" class="w-5 h-5 text-slate-500 hover:text-white transition-colors cursor-pointer"></i>
+                <i data-lucide="twitter" class="w-5 h-5 text-slate-500 hover:text-white transition-colors cursor-pointer"></i>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    lucide.createIcons();
+    
+    const pBtn = document.getElementById('profileBtn');
+    const pMenu = document.getElementById('profileMenu');
+    if(pBtn) {
+        pBtn.onclick = (e) => {
+            e.stopPropagation();
+            pMenu.classList.toggle('show');
+        };
+    }
+
+    const mobBtn = document.getElementById('mobileMenuBtn');
+    const mobMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+    const closeIcon = document.getElementById('closeIcon');
+
+    if(mobBtn) {
+        mobBtn.onclick = () => {
+            mobMenu.classList.toggle('open');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        };
+    }
+
+    document.onclick = (e) => {
+        if (pMenu && !pBtn.contains(e.target)) pMenu.classList.remove('show');
+    };
+
+    // Auto-show and dismiss messages
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('messages-container');
+        const messages = document.querySelectorAll('.message-toast');
+        
+        // Helper function to hide container when empty
+        window.checkAndHideContainer = function() {
+            const container = document.getElementById('messages-container');
+            if (container && container.querySelectorAll('.message-toast').length === 0) {
+                container.classList.add('hidden');
+                container.classList.remove('flex', 'py-4');
+            }
+        };
+        
+        messages.forEach((msg, index) => {
+            setTimeout(() => {
+                msg.style.transform = 'translateY(0)';
+                msg.style.opacity = '1';
+            }, index * 100);
+
+            setTimeout(() => {
+                msg.style.transform = 'translateY(-20px)';
+                msg.style.opacity = '0';
+                setTimeout(() => {
+                    msg.remove();
+                    checkAndHideContainer();
+                }, 500);
+            }, 5000 + (index * 100));
+        });
+        
+        // Initialize lucide icons for messages
+        lucide.createIcons();
+        
+        // Remove URL parameters after showing message (for logout, etc.)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('logout') || urlParams.has('login')) {
+            // Clean URL without reloading the page
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
+    });
+
+    // Global toast function for dynamic messages
+    window.showToast = function(message, type = 'info') {
+        const container = document.getElementById('messages-container');
+        if (!container) return;
+
+        // Make container visible if hidden
+        if (container.classList.contains('hidden')) {
+            container.classList.remove('hidden');
+            container.classList.add('flex', 'py-4');
+        }
+
+        const toast = document.createElement('div');
+        let borderColor, bgColor, iconColor, iconName;
+
+        switch(type) {
+            case 'success':
+                borderColor = 'border-green-500';
+                bgColor = 'bg-green-100';
+                iconColor = 'text-green-600';
+                iconName = 'check-circle';
+                break;
+            case 'error':
+                borderColor = 'border-red-500';
+                bgColor = 'bg-red-100';
+                iconColor = 'text-red-600';
+                iconName = 'alert-circle';
+                break;
+            case 'warning':
+                borderColor = 'border-orange-500';
+                bgColor = 'bg-orange-100';
+                iconColor = 'text-orange-600';
+                iconName = 'alert-triangle';
+                break;
+            default:
+                borderColor = 'border-blue-500';
+                bgColor = 'bg-blue-100';
+                iconColor = 'text-blue-600';
+                iconName = 'info';
+        }
+
+        toast.className = `message-toast mb-3 w-full max-w-md bg-white rounded-2xl shadow-2xl border-2 ${borderColor} pointer-events-auto transform translate-y-[-20px] opacity-0 transition-all duration-500`;
+        toast.innerHTML = `
+            <div class="flex items-center gap-4 p-4">
+                <div class="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${bgColor}">
+                    <i data-lucide="${iconName}" class="w-5 h-5 ${iconColor}"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-slate-900">${message}</p>
+                </div>
+                <button onclick="this.closest('.message-toast').remove(); if(window.checkAndHideContainer) checkAndHideContainer();" class="flex-shrink-0 text-slate-400 hover:text-slate-600 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        `;
+
+        container.appendChild(toast);
+        lucide.createIcons();
+
+        // Scroll to top to show the message
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        setTimeout(() => {
+            toast.style.transform = 'translateY(0)';
+            toast.style.opacity = '1';
+        }, 10);
+
+        setTimeout(() => {
+            toast.style.transform = 'translateY(-20px)';
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                toast.remove();
+                checkAndHideContainer();
+            }, 500);
+        }, 5000);
+    };
+</script>
+</body>
+</html>

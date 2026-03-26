@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Order Success | Kartavya Solar{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-slate-900 pt-32 pb-20 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <img src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&q=80" class="w-full h-full object-cover" alt="Order Success">
+    </div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <h1 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase">Order <span class="text-orange-400">Placed</span></h1>
+        <p class="text-slate-300 max-w-2xl mx-auto text-lg leading-relaxed font-medium">
+            Your order has been successfully placed
+        </p>
+    </div>
+</section>
+
+<div class="bg-slate-50 py-12">
+    <div class="max-w-2xl mx-auto px-4">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-12 text-center">
+            <!-- Success Icon -->
+            <div class="w-24 h-24 bg-green-100 rounded-full mx-auto flex items-center justify-center mb-6">
+                <i data-lucide="check-circle" class="w-12 h-12 text-green-600"></i>
+            </div>
+            
+            <h2 class="text-3xl font-black text-slate-900 mb-4">Thank You for Your Order!</h2>
+            <p class="text-slate-600 mb-8 text-lg">
+                Your order has been placed successfully. Our team will contact you shortly to confirm the delivery details.
+            </p>
+
+            <!-- Order Info -->
+            <div class="bg-slate-50 rounded-xl p-6 mb-8">
+                <p class="text-sm text-slate-600 mb-2">Payment Method</p>
+                <p class="font-bold text-slate-900 text-lg">Cash on Delivery (COD)</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'orders' %}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/30">
+                    <i data-lucide="package" class="w-5 h-5"></i>
+                    View My Orders
+                </a>
+                <a href="{% url 'product_list' %}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+{% endblock %}

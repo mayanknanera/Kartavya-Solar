@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact Us | Kartavya Solar Amreli & PAN India Support{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="bg-slate-900 pt-32 pb-20 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <img src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&q=80" class="w-full h-full object-cover" alt="Solar Energy Solutions">
+    </div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <h1 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase">Let's Power Your <span class="text-orange-400">Future</span></h1>
+        <p class="text-slate-300 max-w-2xl mx-auto text-lg leading-relaxed font-medium">
+            Whether you are an MSME looking to reduce your energy budget or an entrepreneur interested in our PAN India Dealer Program, we are ready to help.
+        </p>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-12">
+            
+            <!-- Contact Form -->
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-200 p-8 md:p-12">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black text-slate-900 mb-3">Send Us a Message</h2>
+                    <p class="text-slate-600">Fill out the form and our team will get back to you within 24 hours.</p>
+                </div>
+
+                <form action="{% url 'contact' %}" method="POST" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 mb-2">Full Name <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" required placeholder="John Doe" value="{{ initial_data.name|default:'' }}" minlength="2"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 mb-2">Phone Number <span class="text-red-500">*</span></label>
+                            <input type="tel" name="phone" required placeholder="+91 98765 43210" value="{{ initial_data.phone|default:'' }}" pattern="[6-9][0-9]{9}" maxlength="10"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all"
+                                title="Please enter a valid 10-digit mobile number starting with 6-9">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 mb-2">Email Address <span class="text-red-500">*</span></label>
+                        <input type="email" name="email" required placeholder="you@example.com" value="{{ initial_data.email|default:'' }}"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 mb-2">Inquiry Type</label>
+                        <select name="service" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all">
+                            <option value="residential">Residential Solar Rooftop</option>
+                            <option value="industrial">Industrial/Commercial Solar Plant</option>
+                            <option value="mw_plant">Solar MW Power Plant</option>
+                            <option value="water_heater">Solar Water Heater</option>
+                            <option value="cleaning">Automation Cleaning & Sprinkler</option>
+                            <option value="liaison">Govt. Liaison & Paperwork</option>
+                            <option value="consultancy">Project Designing & Consultancy</option>
+                            <option value="dealer">Become a Dealer (PAN India)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-900 mb-2">Message</label>
+                        <textarea name="message" rows="5" placeholder="Tell us about your project requirements..." 
+                            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-orange-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/30 flex items-center justify-center gap-2">
+                        Send Message
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Contact Info & Map -->
+            <div class="space-y-6">
+                <!-- Contact Cards -->
+                <div class="grid gap-6">
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 hover:shadow-lg transition-shadow">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="map-pin" class="w-6 h-6 text-orange-500"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 mb-1">Visit Our Office</h3>
+                                <p class="text-slate-600 text-sm">Amreli, Gujarat, India</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 hover:shadow-lg transition-shadow">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="phone" class="w-6 h-6 text-green-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 mb-1">Call or WhatsApp</h3>
+                                <p class="text-slate-600 text-sm">+91 78746 03633</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 hover:shadow-lg transition-shadow">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="mail" class="w-6 h-6 text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 mb-1">Email Support</h3>
+                                <p class="text-slate-600 text-sm">care@kartavyasolar.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dealer CTA -->
+                <div class="bg-orange-500 rounded-2xl shadow-xl p-8 text-white">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="briefcase" class="w-8 h-8"></i>
+                        <h3 class="text-2xl font-black">Dealers Welcome</h3>
+                    </div>
+                    <p class="text-orange-50 mb-6 leading-relaxed">
+                        We are expanding our network! Join us for solar rooftop work across PAN INDIA.
+                    </p>
+                    <a href="https://wa.me/917874603633" class="inline-flex items-center gap-2 bg-white text-orange-500 px-6 py-3 rounded-xl font-bold hover:bg-orange-50 transition-all">
+                        Apply as Dealer
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                </div>
+
+                <!-- Business Hours -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6">
+                    <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="clock" class="w-5 h-5 text-orange-500"></i>
+                        Business Hours
+                    </h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Monday - Friday</span>
+                            <span class="font-semibold text-slate-900">9:00 AM - 6:00 PM</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Saturday</span>
+                            <span class="font-semibold text-slate-900">9:00 AM - 2:00 PM</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Sunday</span>
+                            <span class="font-semibold text-red-600">Closed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Environmental Commitment -->
+<section class="py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="bg-slate-900 rounded-3xl p-12 md:p-16 text-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+            <div class="relative z-10">
+                <h3 class="text-3xl md:text-4xl font-black text-white mb-6">Environmental Commitment</h3>
+                <p class="text-slate-300 max-w-3xl mx-auto leading-relaxed text-lg">
+                    "Over 25 years, your new system will offset your carbon footprint by tons of CO2, equal to planting acres of trees. We look forward to working with you to make your workplaces and buildings more efficient."
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
