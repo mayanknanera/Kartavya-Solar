@@ -1,3 +1,0 @@
-Database name = "solar_db"
-user = "admin"
-password = "admin"
