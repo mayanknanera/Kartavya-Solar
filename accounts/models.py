@@ -3,49 +3,47 @@ from django.db import models
 
 
 class CustomUserManager(BaseUserManager):
-    """Handles creating users with email instead of username"""
+    """User manager that uses email instead of username."""
 
     def create_user(self, email, password=None, **extra_fields):
-        """Create a regular user"""
         if not email:
             raise ValueError("The Email field must be set")
-        email = self.normalize_email(email)  # Normalize email format
+        email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)  # Hash password for security
+        user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """Create an admin user (superuser)"""
-        extra_fields.setdefault("is_staff", True)  # Can access admin panel
-        extra_fields.setdefault("is_superuser", True)  # Has all permissions
-        extra_fields.setdefault("email_verified", True)  # Superusers bypass email verification
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("email_verified", True)
         return self.create_user(email, password, **extra_fields)
 
 
 class CustomUser(AbstractUser):
-    """User model that uses email for login instead of username"""
+    """Custom user model that logs in with email instead of username."""
 
-    username = None  # Remove username field
-    email = models.EmailField(unique=True)  # Email is unique and required
-    first_name = models.CharField(max_length=150, blank=False)  # Required
-    last_name = models.CharField(max_length=150, blank=True)  # Optional
-    phone = models.CharField(max_length=15, blank=True)  # Optional phone number
-    address = models.TextField(blank=True)  # Full address
+    username = None
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150, blank=True)
+    phone = models.CharField(max_length=15, blank=True)
+    address = models.TextField(blank=True)
     city = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)
     pincode = models.CharField(max_length=10, blank=True)
-    
-    # Email verification fields
+
+    # Email OTP verification
     email_verified = models.BooleanField(default=False)
     otp_code = models.CharField(max_length=6, null=True, blank=True)
     otp_created_at = models.DateTimeField(null=True, blank=True)
     otp_attempts = models.IntegerField(default=0)
 
-    USERNAME_FIELD = "email"  # Use email for login
-    REQUIRED_FIELDS = ["first_name"]  # Required when creating superuser
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["first_name"]
 
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.email  # Display email when printing user object
+        return self.email

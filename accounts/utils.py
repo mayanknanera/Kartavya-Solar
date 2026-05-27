@@ -1,40 +1,30 @@
 import secrets
-from django.utils import timezone
 from datetime import timedelta
-from django.core.mail import send_mail
+from django.utils import timezone
+from django.core.mail import EmailMessage
+from django.core.mail.backends.smtp import EmailBackend
 from django.conf import settings
 
 
 def generate_otp():
-    """Generate a 6-digit OTP"""
+    """Return a random 6-digit OTP string."""
     return str(secrets.randbelow(900000) + 100000)
 
 
 def send_otp_email(user, otp):
-    """Send OTP verification email to user"""
+    """Send the OTP verification email. Returns True on success, False on failure."""
     subject = "Verify Your Email - Kartavya Solar"
-    message = f"""
-Hi {user.first_name},
+    body = (
+        f"Hi {user.first_name},\n\n"
+        f"Welcome to Kartavya Solar!\n\n"
+        f"Your email verification code is: {otp}\n\n"
+        f"This code expires in 10 minutes.\n\n"
+        f"If you didn't create an account, please ignore this email.\n\n"
+        f"Thanks,\nKartavya Solar Team"
+    )
 
-Welcome to Kartavya Solar!
-
-Your email verification code is: {otp}
-
-This code will expire in 10 minutes.
-
-If you didn't create an account, please ignore this email.
-
-Thanks,
-Kartavya Solar Team
-    """
-    
     try:
-        # Use explicit SMTP backend to ensure email is sent
-        from django.core.mail import EmailMessage
-        from django.core.mail.backends.smtp import EmailBackend
-        
-        # Create SMTP connection
-        smtp_backend = EmailBackend(
+        smtp = EmailBackend(
             host=settings.EMAIL_HOST,
             port=settings.EMAIL_PORT,
             username=settings.EMAIL_HOST_USER,
@@ -42,61 +32,49 @@ Kartavya Solar Team
             use_tls=settings.EMAIL_USE_TLS,
             fail_silently=False,
         )
-        
-        # Create and send email
-        email_message = EmailMessage(
+        EmailMessage(
             subject=subject,
-            body=message,
+            body=body,
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[user.email],
-            connection=smtp_backend,
-        )
-        email_message.send()
-        
-        print(f"✓ OTP email sent successfully to {user.email}")
+            connection=smtp,
+        ).send()
         return True
     except Exception as e:
-        print(f"✗ Error sending OTP email: {e}")
-        import traceback
-        traceback.print_exc()
+        print(f"OTP email error: {e}")
         return False
 
 
 def is_otp_valid(user):
-    """Check if OTP is still valid (not expired)"""
+    """Return True if the user's OTP has not expired (10-minute window)."""
     if not user.otp_created_at:
         return False
-    
-    expiry_time = user.otp_created_at + timedelta(minutes=10)
-    return timezone.now() < expiry_time
+    return timezone.now() < user.otp_created_at + timedelta(minutes=10)
 
 
 def verify_otp(user, entered_otp):
-    """Verify the OTP entered by user"""
-    # Check if OTP exists
+    """
+    Verify the OTP entered by the user.
+    Returns (success: bool, message: str).
+    """
     if not user.otp_code:
         return False, "No OTP found. Please request a new one."
-    
-    # Check if OTP is expired
+
     if not is_otp_valid(user):
         return False, "OTP has expired. Please request a new one."
-    
-    # Check attempts
+
     if user.otp_attempts >= 3:
         return False, "Too many failed attempts. Please request a new OTP."
-    
-    # Verify OTP
+
     if user.otp_code == entered_otp:
-        # Success - mark email as verified
         user.email_verified = True
         user.otp_code = None
         user.otp_created_at = None
         user.otp_attempts = 0
         user.save()
         return True, "Email verified successfully!"
-    else:
-        # Failed attempt
-        user.otp_attempts += 1
-        user.save()
-        remaining = 3 - user.otp_attempts
-        return False, f"Invalid OTP. {remaining} attempt(s) remaining."
+
+    user.otp_attempts += 1
+    user.save()
+    remaining = 3 - user.otp_attempts
+    return False, f"Invalid OTP. {remaining} attempt(s) remaining."

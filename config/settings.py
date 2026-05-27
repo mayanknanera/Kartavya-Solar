@@ -5,12 +5,11 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load .env file
 load_dotenv(BASE_DIR / ".env")
 
 
-# Helper function to get environment variables
 def get_env(key, default=None, cast=None, required=False):
+    """Read an environment variable, optionally casting its type."""
     value = os.environ.get(key, default)
     if required and value is None:
         raise ImproperlyConfigured(f"Set the {key} environment variable.")
@@ -23,14 +22,14 @@ def get_env(key, default=None, cast=None, required=False):
     return value
 
 
-# security
+# ── Security ──────────────────────────────────────────────────────────────────
+
 SECRET_KEY = get_env("SECRET_KEY", required=True)
 DEBUG = get_env("DEBUG", default=True, cast=bool)
-ALLOWED_HOSTS = (
-    get_env("ALLOWED_HOSTS", default="").split(",") if get_env("ALLOWED_HOSTS") else []
-)
+ALLOWED_HOSTS = get_env("ALLOWED_HOSTS", default="").split(",") if get_env("ALLOWED_HOSTS") else []
 
-# apps
+# ── Apps ──────────────────────────────────────────────────────────────────────
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -38,7 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",
+    "django.contrib.sites",       # Required by allauth
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -50,7 +49,8 @@ INSTALLED_APPS = [
     "django_browser_reload",
 ]
 
-# auth
+# ── Auth ──────────────────────────────────────────────────────────────────────
+
 AUTH_USER_MODEL = "accounts.CustomUser"
 
 AUTHENTICATION_BACKENDS = [
@@ -58,7 +58,8 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-# middleware
+# ── Middleware ────────────────────────────────────────────────────────────────
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -71,7 +72,8 @@ MIDDLEWARE = [
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
-# urls / templates
+# ── URLs & Templates ──────────────────────────────────────────────────────────
+
 ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
@@ -93,77 +95,70 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# database
+# ── Database ──────────────────────────────────────────────────────────────────
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": get_env("DB_NAME", required=True),
-        "USER": get_env("DB_USER", required=True),
-        "PASSWORD": get_env("DB_PASSWORD", required=True),
-        "HOST": get_env("DB_HOST", default="localhost"),
-        "PORT": get_env("DB_PORT", default="5432"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
+# ── Password Validation ───────────────────────────────────────────────────────
 
-# password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# i18n
+# ── Internationalisation ──────────────────────────────────────────────────────
+
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# static / media
+# ── Static & Media ────────────────────────────────────────────────────────────
+
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# sites
-SITE_ID = 1
+# ── Sites Framework ───────────────────────────────────────────────────────────
 
-# account
+SITE_ID = 1  # Required by allauth; Site record is created via migration 0007
+
+# ── Allauth / Login ───────────────────────────────────────────────────────────
+
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-
-SOCIALACCOUNT_LOGIN_ON_GET = True
-
-# New allauth settings (updated syntax)
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = "optional"
-
-# Custom adapter for handling redirects after social login
 ACCOUNT_ADAPTER = "accounts.adapters.CustomAccountAdapter"
 
-# social
+SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
-        "SCOPE": ["profile", "email"],
-        "AUTH_PARAMS": {
-            "access_type": "online",
+        "APP": {
+            "client_id": get_env("GOOGLE_CLIENT_ID", default=""),
+            "secret": get_env("GOOGLE_CLIENT_SECRET", default=""),
+            "key": "",
         },
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
     }
 }
 
-# Email Configuration
-# SMTP backend for sending actual emails (OTP, contact form)
+# ── Email ─────────────────────────────────────────────────────────────────────
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
-
-# SMTP Configuration
 EMAIL_HOST = get_env("EMAIL_HOST", default="smtp.gmail.com")
 EMAIL_PORT = get_env("EMAIL_PORT", default=587)
 EMAIL_USE_TLS = get_env("EMAIL_USE_TLS", default=True, cast=bool)
@@ -171,11 +166,10 @@ EMAIL_HOST_USER = get_env("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = get_env("EMAIL_PASSWORD", default="")
 DEFAULT_FROM_EMAIL = get_env("DEFAULT_FROM_EMAIL", default="")
 SERVER_EMAIL = get_env("EMAIL_HOST_USER", default="")
+EMAIL_TIMEOUT = 10
 
-# Email timeout settings
-EMAIL_TIMEOUT = 10  # seconds
+# ── Tailwind ──────────────────────────────────────────────────────────────────
 
-# tailwind
 TAILWIND_APP_NAME = "theme"
 INTERNAL_IPS = ["127.0.0.1"]
-NPM_BIN_PATH = "/home/raghu/.nvm/versions/node/v24.12.0/bin/node"
+NPM_BIN_PATH = get_env("NPM_BIN_PATH", default="npm")
